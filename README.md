@@ -94,19 +94,4 @@ This application is configured for deployment on Netlify:
 5. The results are returned to the web interface for display
 
 
-# Image-Based Text Adventure Generator
-
-A Python application that transforms a collection of images into an interactive text adventure with branching storylines.
-
-## Overview
-
-This tool uses AI vision and language models to:
-1. Analyze images from your collection
-2. Generate engaging story segments based on each image
-3. Create thematic connections between story segments
-4. Build an interactive adventure with multiple paths and endings
-
-The result is a set of markdown files that can be viewed as an interactive story where readers can make choices that lead to different narrative branches.
-
-
 
