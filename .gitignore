@@ -3,3 +3,7 @@
 /input_images/
 /.cache/
 /_stories/
+/.next/
+/.netlify/
+/node_modules/
+/.DS_Store
