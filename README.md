@@ -1,171 +1,93 @@
-# Image-Based Text Adventure Generator
+# Text Adventure Generator Web Application
 
-A Python application that transforms a collection of images into an interactive text adventure with branching storylines.
-
-## Overview
-
-This tool uses AI vision and language models to:
-1. Analyze images from your collection
-2. Generate engaging story segments based on each image
-3. Create thematic connections between story segments
-4. Build an interactive adventure with multiple paths and endings
-
-The result is a set of markdown files that can be viewed as an interactive story where readers can make choices that lead to different narrative branches.
+This is a web application that allows users to generate interactive text adventures from images. The application uses Next.js for the frontend and integrates with a Python script for generating the text adventures.
 
 ## Features
 
-- **Image Analysis**: Uses the Gemma 2 vision model to extract detailed descriptions from images
-- **Story Generation**: Creates narrative segments based on image content using Llama 3.3 language model
-- **Thematic Coherence**: Identifies common themes across all story segments and rewrites content for consistency
-- **Interactive Branching**: Automatically generates meaningful connections between story segments
-- **Customizable Style**: Supports multiple narrative styles (adventure, mystery, fantasy, sci-fi)
-- **Caching System**: Saves API responses to reduce processing time and costs on subsequent runs
-- **Markdown Output**: Generates properly formatted markdown files with navigation links
-- **Memory Management**: Processes images in batches with configurable delays to prevent memory issues
+- **Image Upload**: Upload one or more images to generate your adventure
+- **Customization Options**: Adjust parameters like narrative style, temperature, and story length
+- **Interactive Results**: View the generated adventure with interactive choices
 
-## Requirements
+## Getting Started
 
-- Python 3.6+
-- Ollama (version 0.1.16 or higher)
-- Required Python packages (see requirements.txt):
-  - ollama
-  - pathlib
-  - typing
-  - requests
-  - tqdm
-  - pillow
-  - pyyaml
+### Prerequisites
 
-## Installation
+- Node.js 18.0.0 or later
+- Python 3.8 or later
+- Ollama (for running local AI models)
 
-1. Clone this repository
-2. Install required packages:
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/kliewerdaniel/textadventure02.git
+   cd textadventure02
    ```
+
+2. Install Python dependencies:
+   ```bash
    pip install -r requirements.txt
    ```
-3. Ensure Ollama is installed and running on your system
-4. Download the required models:
+
+3. Install Node.js dependencies:
+   ```bash
+   cd text-adventure-web
+   npm install
    ```
-   ollama pull gemma2:27b
-   ollama pull llama3.3:latest
+
+### Running the Application
+
+1. Start the development server:
+   ```bash
+   npm run dev
    ```
 
-## Usage
+2. Open [http://localhost:3000/app](http://localhost:3000/app) in your browser to see the application.
 
-### Basic Usage
+   **Important**: Make sure to access the `/app` route to avoid hydration issues.
 
-```bash
-python main.py
-```
+## Deployment
 
-This will:
-- Look for images in the default `input_images` directory
-- Generate stories in the `_stories` directory
-- Use the default "adventure" narrative style
+This application is configured for deployment on Netlify:
 
-### Command Line Options
+1. Push your code to a GitHub repository.
 
-```bash
-python main.py --input INPUT_DIR --output OUTPUT_DIR --style STYLE --length WORD_COUNT --batch-size BATCH_SIZE --delay DELAY --start START_NUM --end END_NUM --config CONFIG_FILE --no-cache
-```
+2. Connect your repository to Netlify:
+   - Sign in to Netlify
+   - Click "New site from Git"
+   - Select your repository
+   - Configure build settings:
+     - Build command: `npm run build`
+     - Publish directory: `.next`
 
-- `--input`: Directory containing images (default: "input_images")
-- `--output`: Directory for story files (default: "_stories")
-- `--style`: Narrative style - "adventure", "mystery", "fantasy", or "sci-fi" (default: "adventure")
-- `--length`: Approximate word count per story segment (default: 300)
-- `--batch-size`: Number of images to process before taking a longer break (default: 10)
-- `--delay`: Delay in seconds between processing images (default: 5)
-- `--start`: Start processing from this image number (default: 1)
-- `--end`: End processing at this image number (optional)
-- `--config`: Path to JSON configuration file
-- `--no-cache`: Disable caching of API responses
+3. Configure environment variables in Netlify:
+   - Set any required environment variables for your Python script
 
-### Configuration File
+## Project Structure
 
-You can customize the application by creating a JSON configuration file:
+- `text-adventure-web/`: Next.js web application
+  - `src/app/`: Application source code
+    - `api/`: API routes for handling requests
+    - `app/`: Client-side only application route
+    - `components/`: React components
+    - `utils/`: Utility functions
+  - `public/`: Static assets
 
-```json
-{
-  "input_dir": "my_images",
-  "output_dir": "my_adventure",
-  "vision_model": "gemma2:27b",
-  "text_model": "llama3.3:latest",
-  "story_length": 500,
-  "temperature": 0.8,
-  "narrative_style": "fantasy",
-  "retry_attempts": 3,
-  "retry_delay": 2,
-  "batch_size": 5,
-  "inter_image_delay": 10,
-  "start_image": 1,
-  "end_image": 20
-}
-```
+- `main.py`: Python script for generating text adventures
+- `requirements.txt`: Python dependencies
 
-## Output Structure
+## How It Works
 
-The generator creates:
+1. Users upload images through the web interface
+2. The application sends the images to the API
+3. The API executes the Python script with the provided parameters
+4. The Python script generates a text adventure based on the images
+5. The results are returned to the web interface for display
 
-1. An index.md file with:
-   - A generated title for the overall adventure
-   - A summary of themes
-   - Links to all starting points
+## Contributing
 
-2. A markdown file for each image with:
-   - A generated title
-   - The image
-   - A story segment
-   - Links to connected story segments
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-## Troubleshooting
+## License
 
-If you encounter issues while using the generator, please refer to the [Troubleshooting Guide](TROUBLESHOOTING.md) for solutions to common problems.
-
-## Examples
-
-### Example Script
-
-An example script `example.sh` is provided to demonstrate different ways to use the generator:
-
-```bash
-# Make the script executable
-chmod +x example.sh
-
-# Run the example
-./example.sh
-```
-
-The script shows how to:
-- Process a subset of images to avoid memory issues
-- Use different narrative styles
-- Customize story length
-- Use custom input and output directories
-- Use a configuration file
-
-### Sample Configuration
-
-A sample configuration file `sample_config.json` is provided as a template:
-
-```bash
-# Run with the sample configuration
-python main.py --config sample_config.json
-```
-
-### Output
-
-After running the generator, open `_stories/index.md` to start the adventure. Each page will present a story segment with choices that lead to other segments, creating a branching narrative experience.
-
-## Customization
-
-- Add your own images to the input directory
-- Modify the narrative style to change the tone and genre
-- Adjust the story length to create shorter or longer segments
-- Edit the prompts in the code to customize the story generation process
-
-
-## Acknowledgments
-
-This project uses:
-- Ollama for local AI model hosting
-- Gemma 2 for vision analysis
-- Llama 3.3 for text generation
+This project is licensed under the MIT License - see the LICENSE file for details.
