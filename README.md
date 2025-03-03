@@ -35,7 +35,7 @@ This is a web application that allows users to generate interactive text adventu
    npm install
    ```
 
-   ```
+
 4. Ensure Ollama is installed and running on your system
 5. Download the required models:
    ```
