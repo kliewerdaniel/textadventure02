@@ -35,6 +35,15 @@ This is a web application that allows users to generate interactive text adventu
    npm install
    ```
 
+   ```
+4. Ensure Ollama is installed and running on your system
+5. Download the required models:
+   ```
+   ollama pull gemma2:27b
+   ollama pull llama3.3:latest
+   ```
+
+
 ### Running the Application
 
 1. Start the development server:
@@ -84,10 +93,20 @@ This application is configured for deployment on Netlify:
 4. The Python script generates a text adventure based on the images
 5. The results are returned to the web interface for display
 
-## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+# Image-Based Text Adventure Generator
 
-## License
+A Python application that transforms a collection of images into an interactive text adventure with branching storylines.
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+## Overview
+
+This tool uses AI vision and language models to:
+1. Analyze images from your collection
+2. Generate engaging story segments based on each image
+3. Create thematic connections between story segments
+4. Build an interactive adventure with multiple paths and endings
+
+The result is a set of markdown files that can be viewed as an interactive story where readers can make choices that lead to different narrative branches.
+
+
+
