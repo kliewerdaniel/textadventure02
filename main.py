@@ -1,5 +1,3 @@
-
-
 import os
 import json
 import random
@@ -45,6 +43,8 @@ def parse_arguments():
                         default=DEFAULT_CONFIG["narrative_style"])
     parser.add_argument("--length", help="Approximate word count per story segment", type=int, 
                         default=DEFAULT_CONFIG["story_length"])
+    parser.add_argument("--temperature", help="Temperature for text generation", type=float,
+                        default=DEFAULT_CONFIG["temperature"])
     parser.add_argument("--batch-size", help="Number of images to process before taking a longer break", type=int,
                         default=DEFAULT_CONFIG["batch_size"])
     parser.add_argument("--delay", help="Delay in seconds between processing images", type=int,
@@ -79,6 +79,8 @@ def load_config(args) -> dict:
         config["narrative_style"] = args.style
     if args.length:
         config["story_length"] = args.length
+    if args.temperature:
+        config["temperature"] = args.temperature
     if args.batch_size:
         config["batch_size"] = args.batch_size
     if args.delay:
@@ -222,7 +224,7 @@ def generate_story(image_analysis: str, config: dict) -> str:
     length = config["story_length"]
     
     style_prompts = {
-        "adventure": "exciting adventure scene with action and danger navigating the streets of Austin reniscent of Heart of Darkness",
+        "adventure": "exciting adventure scene with action and danger",
         "mystery": "intriguing mystery scene with suspense and clues",
         "fantasy": "magical fantasy scene with wonder and imagination",
         "sci-fi": "futuristic sci-fi scene with technological elements"
@@ -271,6 +273,7 @@ def extract_themes(stories: List[str], config: dict) -> str:
     """Extract common themes from all the stories."""
     logger.info("Extracting common themes across stories")
     
+    segments_text = "\n\n--- SEGMENT ---\n\n".join(stories)
     prompt = f"""
     Analyze these {len(stories)} story segments to identify:
     
@@ -284,7 +287,7 @@ def extract_themes(stories: List[str], config: dict) -> str:
     
     Story segments:
     
-    {"\n\n--- SEGMENT ---\n\n".join(stories)}
+    {segments_text}
     """
     
     messages = [{"role": "user", "content": prompt}]
@@ -509,6 +512,8 @@ def save_markdown(story: str, image_filename: str, filename: str,
         choices_md += "* [The End](/stories/index)\n"
     
     # Create the Markdown content with YAML front matter
+    # Use forward slashes for URLs in Markdown
+    image_path = f"{input_dir}/{image_filename}".replace("\\", "/")
     md_content = f"""---
 layout: story
 title: {title}
@@ -516,7 +521,7 @@ title: {title}
 
 # {title}
 
-![{title}](/{input_dir}/{image_filename})
+![{title}](/{image_path})
 
 {story}
 
@@ -616,7 +621,7 @@ def find_image_files(input_dir: str, extensions: List[str]) -> List[Path]:
         image_files.extend(input_path.glob(f"*{ext.upper()}"))
     
     if not image_files:
-        logger.warning(f"No images found in {input_dir} with extensions {extensions}")
+        logger.warning(f"No images found in {input_dir} with extensions {', '.join(extensions)}")
     
     return image_files
 
